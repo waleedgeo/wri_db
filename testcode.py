@@ -1,3 +1,2 @@
 import basecode as bc
-bc.update()
-
+bc.display()

@@ -3,13 +3,12 @@ import sqlite3
 from tkinter import ttk, messagebox
 
 con = sqlite3.connect("risk_index.db")
-con.execute("CREATE TABLE IF NOT EXISTS risk(country TEXT, wri REAL, vul REAL, year INTEGER);")
-con.execute("CREATE TABLE IF NOT EXISTS temperature(country TEXT, year INTEGER, temp REAL);")
+con.execute("CREATE TABLE IF NOT EXISTS risk(country TEXT, wri REAL, vul REAL, year INTEGER, temp REAL);")
+#con.execute("CREATE TABLE IF NOT EXISTS temperature(country TEXT, year INTEGER, temp REAL);")
 
 def insert_data(country, wri, vul, year, temp):
     conn = sqlite3.connect("risk_index.db")
-    conn.execute("INSERT INTO risk(country, wri, vul, year, temp) VALUES( '" + country + "', '" + wri +
-                 "', '" + vul + "', '" + year + "', '" + temp + "' );")
+    conn.execute("INSERT INTO risk(country, wri, vul, year, temp) VALUES( '" + country + "', '" + wri +"', '" + vul + "', '" + year + "', '" + temp + "' );")
     conn.commit()
     conn.close()
     messagebox.showinfo("Success", "Data Saved Successfully.")
@@ -62,7 +61,7 @@ def display():
     table.heading("four", text="Year")
     table.heading("five", text="Temperature Change")
 
-    cursor = connn.execute("SELECT rowid,* FROM risk, temperature;")
+    cursor = connn.execute("SELECT rowid,* FROM risk")
     i = 0
     for row in cursor:
         table.insert('', i, text="Risk " + str(row[0]), values=(row[1], row[2], row[3], row[4], row[5]))
@@ -126,7 +125,7 @@ def delete():
     def submit():
         dcountry = d_country.get()
         dcon = sqlite3.connect("risk_index.db")
-        dcon.execute("DELETE FROM risk, temperature WHERE country = '" + dcountry+"';")
+        dcon.execute("DELETE FROM risk WHERE country = '" + dcountry+"';")
         dcon.commit()
         dcon.execute("VACUUM;")
         dcon.commit()
@@ -165,7 +164,7 @@ def search():
 
         fcountry = f_country.get()
         fcon = sqlite3.connect("risk_index.db")
-        cursor = fcon.execute("SELECT rowid,* from risk, temperature WHERE country = '" + fcountry + "';")
+        cursor = fcon.execute("SELECT rowid,* from risk, WHERE country = '" + fcountry + "';")
         fcon.commit()
 
         i = 0
