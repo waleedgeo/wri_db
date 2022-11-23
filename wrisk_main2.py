@@ -1,19 +1,24 @@
+# importing modules
 import tkinter as tk
 import sqlite3
 from tkinter import ttk, messagebox
+import pandas.io.sql as psql
 
+# connecting to our earlier created database
 con = sqlite3.connect("risk_index.db")
-con.execute("CREATE TABLE IF NOT EXISTS risk(country TEXT, wri REAL, vul REAL, year INTEGER, temp REAL);")
-#con.execute("CREATE TABLE IF NOT EXISTS temperature(country TEXT, year INTEGER, temp REAL);")
 
+# additional command in case no previous input is supplied, the code will still work
+con.execute("CREATE TABLE IF NOT EXISTS wrisk(country TEXT, wri REAL, vul REAL, year INTEGER, temp REAL);")
+
+# designing insert data query
 def insert_data(country, wri, vul, year, temp):
     conn = sqlite3.connect("risk_index.db")
-    conn.execute("INSERT INTO risk(country, wri, vul, year, temp) VALUES( '" + country + "', '" + wri +"', '" + vul + "', '" + year + "', '" + temp + "' );")
+    conn.execute("INSERT INTO wrisk(country, wri, vul, year, temp) VALUES( '" + country + "', '" + wri +"', '" + vul + "', '" + year + "', '" + temp + "' );")
     conn.commit()
     conn.close()
     messagebox.showinfo("Success", "Data Saved Successfully.")
 
-
+# designing insert window of application
 def insert():
     add_window = tk.Tk()
     add_window.title("Add Details")
@@ -35,7 +40,7 @@ def insert():
     grade_entry.grid(row=5, column=1, padx=25)
 
     tk.Button(add_window, text='Submit', activebackground='grey', activeforeground='white', command=lambda: submit()).grid(row=6, column=0, columnspan=2, pady=10)
-
+    # define working of submit button
     def submit():
         country = country_entry.get()
         wri = wri_entry.get()
@@ -47,7 +52,7 @@ def insert():
 
     add_window.mainloop()
 
-
+    #designing display window for application 
 def display():
     connn = sqlite3.connect("risk_index.db")
     display_window = tk.Tk()
@@ -61,19 +66,19 @@ def display():
     table.heading("four", text="Year")
     table.heading("five", text="Temperature Change")
 
-    cursor = connn.execute("SELECT rowid,* FROM risk")
+    cursor = connn.execute("SELECT rowid,* FROM wrisk")
     i = 0
     for row in cursor:
-        table.insert('', i, text="Risk " + str(row[0]), values=(row[1], row[2], row[3], row[4], row[5]))
+        table.insert('', i, text="ID " + str(row[0]), values=(row[1], row[2], row[3], row[4], row[5]))
         i = i + 1
     table.pack()
     connn.close()
 
-
+# designing update window for application
 def update():
     update_window = tk.Tk()
     update_window.title("Update Details")
-    tk.Label(update_window, text="Select the ID of country to be Updated:").grid(row=0, column=0, sticky="W", padx=10, columnspan=2)
+    tk.Label(update_window, text="Enter the column to be Updated:").grid(row=0, column=0, sticky="W", padx=10, columnspan=2)
     s_id = tk.Entry(update_window, width=50)
     s_id.grid(row=1, column=0, sticky="W", padx=10, columnspan=2)
     tk.Label(update_window, text="\nEnter the new values:").grid(row=2, column=0, sticky="W", padx=10, pady=10, columnspan=2)
@@ -94,7 +99,7 @@ def update():
     s_temp.grid(row=7, column=1, sticky="W", padx=10, pady=10)
     tk.Button(update_window, text="Update", activebackground='grey', activeforeground='white',
               command=lambda: submit()).grid(row=8, column=0, padx=10, pady=10, columnspan=2)
-
+    # submit for update
     def submit():
         sid = s_id.get()
         scountry = s_country.get()
@@ -103,7 +108,7 @@ def update():
         syear = s_year.get()
         stemp = s_temp.get()
         scon = sqlite3.connect("risk_index.db")
-        scon.execute("UPDATE risk SET country = '" + scountry + "',wri = '" + swri + "', vul = '" + svul +
+        scon.execute("UPDATE wrisk SET country = '" + scountry + "',wri = '" + swri + "', vul = '" + svul +
                      "', year = '" + syear + "', temp = '" + stemp + "' WHERE rowid = " + sid + ";")
         scon.commit()
         scon.close()
@@ -111,7 +116,7 @@ def update():
         update_window.destroy()
     update_window.mainloop()
 
-
+# designing delete window for application
 def delete():
     delete_window = tk.Tk()
     delete_window.title("Delete Info ")
@@ -121,11 +126,11 @@ def delete():
     tk.Button(delete_window, text="Delete Details", activebackground='grey', activeforeground='white',
               command=lambda: submit()).grid(row=1, column=0, columnspan=2)
     tk.Label(delete_window).grid(row=2, column=0, columnspan=2)
-
+    # submit button for delete
     def submit():
         dcountry = d_country.get()
         dcon = sqlite3.connect("risk_index.db")
-        dcon.execute("DELETE FROM risk WHERE country = '" + dcountry+"';")
+        dcon.execute("DELETE FROM wrisk WHERE country = '" + dcountry+"';")
         dcon.commit()
         dcon.execute("VACUUM;")
         dcon.commit()
@@ -134,7 +139,7 @@ def delete():
         delete_window.destroy()
     delete_window.mainloop()
 
-
+# designing search window for application
 def search():
     search_window = tk.Tk()
     search_window.title("Search Risk Index Details")
@@ -157,19 +162,19 @@ def search():
     details.heading("three", text="vul")
     details.heading("four", text="year No")
     details.heading("five", text="temp")
-
+    # submit button for search
     def submit():
         for row in details.get_children():
             details.delete(row)
 
         fcountry = f_country.get()
         fcon = sqlite3.connect("risk_index.db")
-        cursor = fcon.execute("SELECT rowid,* from risk, WHERE country = '" + fcountry + "';")
+        cursor = fcon.execute("SELECT * from wrisk WHERE country LIKE '" + str(fcountry) + "'")
         fcon.commit()
 
         i = 0
         for row in cursor:
-            details.insert('', i, text="risk " + str(row[0]), values=(row[1], row[2], row[3], row[4], row[5]))
+            details.insert('', i, text="Risk " + str(row[0]), values=(row[1], row[2], row[3], row[4], row[5]))
             i = i + 1
 
         details.grid(row=4, column=0, columnspan=2, padx=10, pady=10)

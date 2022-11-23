@@ -1,4 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="D:/cloud_data/OneDrive - Hong Kong Baptist University/PhD/courses/Big Data Management and Analytics/Coding/FinalProj/risk_index.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="150"/><column_width id="3" width="1682"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,4:mainrisk"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="risk" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="300"/><column index="2" value="61"/><column index="3" value="61"/><column index="4" value="61"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="temperature" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="300"/><column index="2" value="64"/><column index="3" value="61"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">SELECT temperature.country, temperature.year, temperature.temp, risk.wri, risk.vul
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/22481125/OneDrive - Hong Kong Baptist University/PhD/courses/Big Data Management and Analytics/Coding/wri_db/risk_index.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="150"/><column_width id="3" width="1012"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,5:mainwrisk"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="risk" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="198"/><column index="2" value="40"/><column index="3" value="40"/><column index="4" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="wrisk" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="198"/><column index="2" value="40"/><column index="3" value="40"/><column index="4" value="40"/><column index="5" value="81"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">	SELECT
+			country, year
+	FROM
+		risk
+UNION ALL
+	SELECT 
+			country, year
+	FROM
+		temperature
+
+</sql><sql name="SQL 3">INSERT INTO risk(temperature.temp)
+VALUES(temperature.temp)</sql><sql name="SQL 4">SELECT risk.country, risk.year, risk.wri
+FROM risk
+FULL OUTER JOIN
+SELECT temperature.country, temperatur.year, temperature.temp
+FROM temperature</sql><sql name="SQL 5">SELECT risk.country, wri, vul, risk.year, temp
 FROM risk
 LEFT JOIN temperature
-WHERE risk.country = temperature.country</sql><current_tab id="0"/></tab_sql></sqlb_project>
+ON risk.country=temperature.country AND risk.year=temperature.year;</sql><sql name="SQL 6">SELECT * from wrisk WHERE country like &quot;pakistan&quot;;</sql><sql name="SQL 7">SELECT *
+From wrisk
+WHERE country like 'Pakistan'and year = 2015</sql><current_tab id="5"/></tab_sql></sqlb_project>
